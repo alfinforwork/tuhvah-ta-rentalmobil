@@ -26,15 +26,20 @@ class Transaksi extends CI_Controller
 		// Set 3DS transaction for credit card to true
 		\Midtrans\Config::$is3ds = true;
 
-
 		$transaksi = $this->Transaksi_model->get_by_id_row($id_transaksi);
+
+		$lama_sewa = round((strtotime($transaksi->tgl_kembali) - strtotime($transaksi->tgl_rental)) / (60 * 60 * 24));
+
+		$biaya_sopir = $transaksi->jenis_layanan == 'sopir' ? 50000 : 0;
 
 		$params = array(
 			'transaction_details' => array(
 				'order_id' => $transaksi->id_rental . date('dmYHis'),
-				'gross_amount' => $transaksi->biaya * (date('d', strtotime($transaksi->tgl_kembali)) - date('d', strtotime($transaksi->tgl_rental))),
+				// ((harga_per_hari * lama_sewa) + (lama_sewa * biaya_sopir))
+				'gross_amount' => ($transaksi->biaya * $lama_sewa) + ($lama_sewa * $biaya_sopir),
 			)
 		);
+
 		try {
 			$status = \Midtrans\Transaction::status($transaksi->id_midtrans);
 		} catch (\Exception $e) {
@@ -105,18 +110,38 @@ class Transaksi extends CI_Controller
 
 			$order_id = $this->input->post('order_id');
 			$transaction_status = $this->input->post('transaction_status');
+			$permata_va_number = $this->input->post('permata_va_number');
+			$bca_va_number = $this->input->post('bca_va_number');
+			$bni_object_va_number = @(object)($this->input->post('va_numbers')[0]);
+			$bni_va_number = @$bni_object_va_number->bank == 'bni' ? @$bni_object_va_number->va_number : null;
+			$bri_object_va_number = @(object)($this->input->post('va_numbers')[0]);
+			$bri_va_number = @$bri_object_va_number->bank == 'bri' ? @$bri_object_va_number->va_number : null;
 
 			$data = [];
 			if ($order_id) {
 				$data['id_midtrans'] = $order_id;
 			}
-
+			if ($permata_va_number) {
+				$data['tipe_pembayaran'] = 'bank';
+				$data['jenis_pembayaran'] = 'permata';
+				$data['kode_pembayaran'] = $permata_va_number;
+			} else if ($bca_va_number) {
+				$data['tipe_pembayaran'] = 'bank';
+				$data['jenis_pembayaran'] = 'bca';
+				$data['kode_pembayaran'] = $bca_va_number;
+			} else if ($bni_va_number) {
+				$data['tipe_pembayaran'] = 'bank';
+				$data['jenis_pembayaran'] = 'bni';
+				$data['kode_pembayaran'] = $bni_va_number;
+			} else if ($bri_va_number) {
+				$data['tipe_pembayaran'] = 'bank';
+				$data['jenis_pembayaran'] = 'bri';
+				$data['kode_pembayaran'] = $bri_va_number;
+			}
 			if ($transaction_status == 'settlement') {
 				$data['status_rental'] = 3;
 			}
 			$cek = $this->db->where('id_rental', $id_transaksi)->update('transaksi', $data);
-			echo $this->db->last_query();
-			die;
 			if ($cek) {
 				$this->output
 					->set_status_header(200)

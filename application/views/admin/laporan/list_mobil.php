@@ -1,7 +1,7 @@
 <div class="main-content">
 	<section class="section">
 		<div class="section-header">
-			<h1>Laporan Transaksi Selesai</h1>
+			<h1>Cek mobil <?= str_replace('_', ' ', $_GET['menu']); ?></h1>
 		</div>
 		<div class="card">
 			<div class="card-body">

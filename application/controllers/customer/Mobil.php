@@ -22,8 +22,6 @@ class Mobil extends CI_Controller
 
 	public function index()
 	{
-		$model = $this->Mobil_model;
-
 		$q = urldecode($this->input->get('q', TRUE));
 		$start = intval($this->input->get('start'));
 
@@ -37,8 +35,16 @@ class Mobil extends CI_Controller
 
 		$config['per_page'] = 9;               //Tes
 		$config['page_query_string'] = TRUE;
-		$config['total_rows'] = $model->jumlah_data($q);
-		$mobil = $model->limit_data($config['per_page'], $start, $q);
+		$config['total_rows'] = $this->Mobil_model->jumlah_data($q);
+		$mobil = $this->Mobil_model->limit_data($config['per_page'], $start, $q);
+
+		// echo $this->db->last_query();
+
+		// echo "<pre>";
+		// print_r($mobil);
+		// echo "</pre>";
+
+		// die;
 
 		$this->load->library('pagination');
 		$this->pagination->initialize($config);
@@ -116,6 +122,7 @@ class Mobil extends CI_Controller
 					'jaminan_stnk_plat'	=> $this->input->post('jaminan_stnk_plat'),
 					'jaminan_motor_plat'	=> $this->input->post('jaminan_motor_plat'),
 					'jaminan_motor_merk'	=> $this->input->post('jaminan_motor_merk'),
+					'jenis_layanan'	=> $this->input->post('jenis_layanan'),
 				];
 
 				$cek = $this->db->insert('transaksi', $data);

@@ -42,7 +42,12 @@
 														</tr>
 														<tr>
 															<th>No KTP</th>
-															<td><?= $customer->no_ktp ?></td>
+															<td>
+																<?= form_error('no_ktp') ?>
+																<div class="input-group input-group-sm">
+																	<input type="number" name="no_ktp" id="no_ktp" class="form-control" required value="<?= $this->input->post('no_ktp', true) ?: $customer->no_ktp ?>" minlength="16">
+																</div>
+															</td>
 														</tr>
 														<tr>
 															<th>Alamat</th>
@@ -50,15 +55,6 @@
 																<?= form_error('alamat') ?>
 																<div class="input-group input-group-sm">
 																	<textarea name="alamat" id="alamat" class="form-control" required><?= $this->input->post('alamat', true) ?: $customer->alamat ?></textarea>
-																</div>
-															</td>
-														</tr>
-														<tr>
-															<th>No KTP</th>
-															<td>
-																<?= form_error('no_ktp') ?>
-																<div class="input-group input-group-sm">
-																	<input type="number" name="no_ktp" id="no_ktp" class="form-control" required value="<?= $this->input->post('no_ktp', true) ?: $customer->no_ktp ?>" minlength="16">
 																</div>
 															</td>
 														</tr>
@@ -197,7 +193,7 @@
 														</tr>
 														<tr>
 															<th>Harga Per Hari</th>
-															<td>Rp. <?= $mobil->biaya ?></td>
+															<td>Rp. <?= rupiah($mobil->biaya) ?></td>
 														</tr>
 														<tr>
 															<th>Tanggal sewa</th>

@@ -82,7 +82,7 @@ CREATE TABLE `tb_customer` (
   `no_ktp` varchar(30) NOT NULL,
   `password` varchar(255) NOT NULL,
   PRIMARY KEY (`id_customer`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,7 +91,7 @@ CREATE TABLE `tb_customer` (
 
 LOCK TABLES `tb_customer` WRITE;
 /*!40000 ALTER TABLE `tb_customer` DISABLE KEYS */;
-INSERT INTO `tb_customer` VALUES (5,'M Jono Supeno','jono123','jogjakarta','l','0888888888','1234123409870987','25d55ad283aa400af464c76d713c07ad'),(6,'Bambang Pamungkas','bambang21','Sleman','l','082112345678','1234213213213','25d55ad283aa400af464c76d713c07ad'),(7,'Kevin Kuncoro','kevin123','Yogjakarta','l','089089765567','1234567812345678','25d55ad283aa400af464c76d713c07ad'),(8,'David Michael','david123','Sleman, Yogyakarta','l','087654321156','12345678909876545','25d55ad283aa400af464c76d713c07ad'),(9,'Supriadi','massupri','','l','085789987789','','25d55ad283aa400af464c76d713c07ad'),(10,'Supandi','supandi123','','l','088098765567','','25d55ad283aa400af464c76d713c07ad'),(11,'David Fernando','david21','Ngaglik, Sleman','l','088123456789','1234123409870123','25d55ad283aa400af464c76d713c07ad'),(12,'Mr Jono','jono213','Sleman, Yogyakarta','l','087654321156','1234123409870123','25d55ad283aa400af464c76d713c07ad'),(13,'Setiawan Gunadi','setiawan123','Baciro,kota yogyakarta, DIY','l','08232123123','1234123409871234','25d55ad283aa400af464c76d713c07ad'),(14,'doni setyawan','doni21','yogyakarta','l','087654321123','1234123409870987','25d55ad283aa400af464c76d713c07ad'),(15,'dono setiabudi','dono123','yogyakarta','l','087654321123','1234123409871234','25d55ad283aa400af464c76d713c07ad');
+INSERT INTO `tb_customer` VALUES (5,'M Jono Supeno','jono123','jogjakarta','l','0888888888','1234123409870987','25d55ad283aa400af464c76d713c07ad'),(6,'Bambang Pamungkas','bambang21','Sleman','l','082112345678','1234213213213','25d55ad283aa400af464c76d713c07ad'),(7,'Kevin Kuncoro','kevin123','Yogjakarta','l','089089765567','1234567812345678','25d55ad283aa400af464c76d713c07ad'),(8,'David Michael','david123','Sleman, Yogyakarta','l','087654321156','12345678909876545','25d55ad283aa400af464c76d713c07ad'),(9,'Supriadi','massupri','','l','085789987789','','25d55ad283aa400af464c76d713c07ad'),(10,'Supandi','supandi123','','l','088098765567','','25d55ad283aa400af464c76d713c07ad'),(11,'David Fernando','david21','Ngaglik, Sleman','l','088123456789','1234123409870123','25d55ad283aa400af464c76d713c07ad'),(12,'Mr Jono','jono213','Sleman, Yogyakarta','l','087654321156','1234123409870123','25d55ad283aa400af464c76d713c07ad'),(13,'Setiawan Gunadi','setiawan123','Baciro,kota yogyakarta, DIY','l','08232123123','1234123409871234','25d55ad283aa400af464c76d713c07ad'),(14,'doni setyawan','doni21','yogyakarta','l','087654321123','1234123409870987','25d55ad283aa400af464c76d713c07ad'),(15,'dono setiabudi','dono123','yogyakarta','l','087654321123','1234123409871234','25d55ad283aa400af464c76d713c07ad'),(16,'alfin nahrowi','alfin123','sleman','l','08562829','123412341234','25d55ad283aa400af464c76d713c07ad');
 /*!40000 ALTER TABLE `tb_customer` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -194,15 +194,25 @@ DROP TABLE IF EXISTS `transaksi`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `transaksi` (
   `id_rental` int(11) NOT NULL AUTO_INCREMENT,
+  `jenis_layanan` enum('sopir','tanpa_sopir') DEFAULT NULL,
+  `jaminan_ktp` varchar(100) DEFAULT NULL,
+  `jaminan_stnk_nama` varchar(100) DEFAULT NULL,
+  `jaminan_stnk_plat` varchar(100) DEFAULT NULL,
+  `jaminan_motor_plat` varchar(100) DEFAULT NULL,
+  `jaminan_motor_merk` varchar(100) DEFAULT NULL,
   `id_customer` int(11) NOT NULL,
   `id_mobil` int(11) NOT NULL,
   `id_midtrans` varchar(50) NOT NULL DEFAULT '',
-  `tgl_rental` date NOT NULL,
-  `tgl_kembali` date NOT NULL,
-  `tgl_pengembalian` date DEFAULT NULL,
+  `tgl_rental` datetime NOT NULL,
+  `tgl_kembali` datetime NOT NULL,
+  `tgl_pengembalian` datetime DEFAULT NULL,
   `status_pengembalian` varchar(50) NOT NULL,
   `status_rental` int(50) NOT NULL,
   `bukti_transfer` varchar(255) DEFAULT NULL,
+  `tipe_pembayaran` varchar(255) DEFAULT NULL,
+  `jenis_pembayaran` varchar(255) DEFAULT NULL,
+  `kode_pembayaran` varchar(255) DEFAULT NULL,
+  `kode_bank_midtrans` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id_rental`),
   KEY `status_rental` (`status_rental`),
   KEY `id_customer` (`id_customer`),
@@ -210,7 +220,7 @@ CREATE TABLE `transaksi` (
   CONSTRAINT `transaksi_ibfk_1` FOREIGN KEY (`status_rental`) REFERENCES `status_rental` (`id_status_rental`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `transaksi_ibfk_2` FOREIGN KEY (`id_customer`) REFERENCES `tb_customer` (`id_customer`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `transaksi_ibfk_3` FOREIGN KEY (`id_mobil`) REFERENCES `tb_mobil` (`id_mobil`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -219,7 +229,7 @@ CREATE TABLE `transaksi` (
 
 LOCK TABLES `transaksi` WRITE;
 /*!40000 ALTER TABLE `transaksi` DISABLE KEYS */;
-INSERT INTO `transaksi` VALUES (19,5,21,'','2021-03-03','2021-03-05','2021-03-05','',4,'assets/upload/foto/bukti_transfer/download_(4)2.jpg'),(20,6,11,'','2021-03-01','2021-03-03','2021-03-03','',4,'assets/upload/foto/bukti_transfer/download_(4)3.jpg'),(21,6,31,'','2021-03-03','2021-03-06','2021-03-06','',4,'assets/upload/foto/bukti_transfer/download_(4)6.jpg'),(22,6,31,'','2021-03-04','2021-03-07','2021-03-07','',4,'assets/upload/foto/bukti_transfer/download_(4)5.jpg'),(23,5,17,'','2021-03-02','2021-03-04','2021-03-04','',4,'assets/upload/foto/bukti_transfer/download_(4)7.jpg'),(24,5,30,'','2021-03-01','2021-03-06','2021-03-06','',4,'assets/upload/foto/bukti_transfer/download_(4)8.jpg'),(25,7,33,'','2021-03-06','2021-03-07','2021-03-07','',4,'assets/upload/foto/bukti_transfer/download_(4).jpg'),(26,8,28,'','2021-03-01','2021-03-08','2021-03-08','',4,'assets/upload/foto/bukti_transfer/download_(4)1.jpg'),(27,5,13,'','2021-03-16','2021-03-17','2021-03-17','',4,'assets/upload/foto/bukti_transfer/download_(4)2.jpg'),(28,8,16,'','2021-03-09','2021-03-11','2021-03-11','',4,'assets/upload/foto/bukti_transfer/download_(4)3.jpg'),(29,9,22,'','2021-03-14','2021-03-15','2021-03-15','',4,'assets/upload/foto/bukti_transfer/download_(4)4.jpg'),(30,10,17,'','2021-03-07','2021-03-08','2021-03-08','',4,'assets/upload/foto/bukti_transfer/download_(4)5.jpg'),(31,11,16,'','2021-04-04','2021-04-05','2021-04-05','',4,'assets/upload/foto/bukti_transfer/download_(4)6.jpg'),(32,12,22,'3227112022152548','2021-04-07','2021-04-09','2021-04-09','',4,'assets/upload/foto/bukti_transfer/download_(4)7.jpg'),(33,13,28,'','2021-04-04','2021-04-05','2021-04-05','',4,'assets/upload/foto/bukti_transfer/download_(4)8.jpg'),(34,13,25,'','2021-03-28','2021-03-29','2021-03-29','',4,'assets/upload/foto/bukti_transfer/download_(4)9.jpg'),(35,6,24,'','2021-03-27','2021-03-29','2021-03-29','',4,'assets/upload/foto/bukti_transfer/download_(4)10.jpg'),(36,6,21,'','2021-04-01','2021-04-02','2021-04-02','',4,'assets/upload/foto/bukti_transfer/download_(4)11.jpg'),(37,6,29,'','2021-04-04','2021-04-05','2021-04-05','',4,'assets/upload/foto/bukti_transfer/download_(4)12.jpg'),(38,6,16,'','2021-04-07','2021-04-08','2021-04-08','',4,'assets/upload/foto/bukti_transfer/download_(4)13.jpg'),(39,6,25,'','2021-04-01','2021-04-04','2021-04-04','',4,'assets/upload/foto/bukti_transfer/download_(4)14.jpg'),(40,6,19,'','2021-04-01','2021-04-02','2021-04-02','',4,'assets/upload/foto/bukti_transfer/download_(4)15.jpg'),(41,6,29,'','2021-04-01','2021-04-03',NULL,'',1,NULL),(42,6,19,'','2021-03-31','2021-04-02',NULL,'',1,NULL),(43,5,22,'','2021-04-01','2021-04-02','2021-04-02','',4,'assets/upload/foto/bukti_transfer/download_(4)16.jpg'),(44,6,16,'','2021-04-10','2021-04-12','2021-04-12','',4,'assets/upload/foto/bukti_transfer/download_(4)17.jpg'),(45,5,16,'','2021-04-11','2021-04-12','2021-04-12','',4,'assets/upload/foto/bukti_transfer/download_(4)18.jpg'),(46,5,19,'','2021-04-15','2021-04-16','2021-04-16','',4,'assets/upload/foto/bukti_transfer/download_(4)19.jpg'),(47,6,33,'','2021-04-17','2021-04-18','2021-04-18','',4,'assets/upload/foto/bukti_transfer/download_(4)20.jpg'),(48,5,17,'','2021-04-18','2021-04-19','2021-04-19','',4,'assets/upload/foto/bukti_transfer/download_(4)21.jpg'),(49,6,25,'','2021-04-18','2021-04-19',NULL,'',2,'assets/upload/foto/bukti_transfer/download_(4)22.jpg'),(50,6,17,'','2021-04-17','2021-04-18','2021-04-18','',4,'assets/upload/foto/bukti_transfer/download_(4)23.jpg'),(51,14,17,'','2021-04-18','2021-04-19','2021-04-19','',4,'assets/upload/foto/bukti_transfer/download_(4)24.jpg'),(52,15,17,'','2021-04-18','2021-04-19','2021-04-19','',4,'assets/upload/foto/bukti_transfer/download_(4)25.jpg'),(53,6,17,'','2021-04-19','2021-04-20','2021-04-21','',4,'assets/upload/foto/bukti_transfer/download_(4)26.jpg'),(54,12,11,'','2022-11-28','2022-11-29',NULL,'',1,NULL),(55,5,10,'5504122022135055','2022-12-04','2022-12-16',NULL,'',3,NULL),(56,5,11,'5604122022135927','2022-12-05','2022-12-07','2022-12-05','',4,NULL),(57,5,12,'5704122022140317','2022-12-04','2022-12-07',NULL,'',3,NULL),(58,5,13,'5804122022142234','2022-12-04','2022-12-16',NULL,'',3,NULL);
+INSERT INTO `transaksi` VALUES (65,'sopir','2312391243928','jono','AG 4567 RBD','AG 4567 RBD','Scoopy',5,10,'6527122022095009','2022-12-24 15:27:00','2022-12-25 07:06:17','2022-12-26 07:06:17','',4,NULL,'bank','bca','48487137314',NULL),(67,'sopir','2312391243928','jono','AG 4567 RBD','AG 4567 RBD','Scoopy',5,27,'6727122022110134','2022-12-27 18:01:00','2023-01-08 18:01:00','2023-01-09 18:02:00','',4,NULL,'bank','bca','48487626377',NULL),(68,'sopir','2312391243928','jono','AG 4567 RBD','AG 4567 RBD','Scoopy',5,16,'6827122022134600','2022-12-27 20:45:00','2023-01-16 20:45:00',NULL,'',3,NULL,'bank','bca','48487314829',NULL);
 /*!40000 ALTER TABLE `transaksi` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -232,4 +242,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-12-05 13:49:52
+-- Dump completed on 2022-12-27 22:04:15

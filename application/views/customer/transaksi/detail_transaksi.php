@@ -94,12 +94,41 @@
 											<div class="card-body">
 												<table class="table custom-table table-sm table-hover table-striped">
 													<tr>
+														<th>Jenis Layanan</th>
+														<td><?= $transaksi->jenis_layanan == 'sopir' ? 'Sopir' : 'Tanpa Sopir' ?></td>
+													</tr>
+													<tr>
+														<th>Jaminan</th>
+														<td>
+															<p>
+																KTP <br>
+																<?= $transaksi->jaminan_ktp ?>
+															</p>
+															<p>
+																NAMA (STNK) <br>
+																<?= ucfirst($transaksi->jaminan_stnk_nama) ?>
+															</p>
+															<p>
+																PLAT NOMOR (STNK) <br>
+																<?= $transaksi->jaminan_stnk_plat ?>
+															</p>
+															<p>
+																PLAT MOTOR (MOTOR) <br>
+																<?= $transaksi->jaminan_motor_plat ?>
+															</p>
+															<p>
+																MERK (MOTOR) <br>
+																<?= $transaksi->jaminan_motor_merk ?>
+															</p>
+														</td>
+													</tr>
+													<tr>
 														<th>Merk Mobil</th>
 														<td><?= $transaksi->merk ?></td>
 													</tr>
 													<tr>
 														<th>Harga Per Hari</th>
-														<td>Rp. <?= $transaksi->biaya ?></td>
+														<td>Rp. <?= rupiah($transaksi->biaya) ?></td>
 													</tr>
 													<tr>
 														<th>Tanggal Sewa</th>
@@ -111,7 +140,7 @@
 													</tr>
 													<tr>
 														<th>Lama sewa</th>
-														<td><?= round((strtotime($transaksi->tgl_kembali) - strtotime($transaksi->tgl_rental)) / (60 * 60 * 24)) ?> Hari</td>
+														<td><?= $lama_sewa = round((strtotime($transaksi->tgl_kembali) - strtotime($transaksi->tgl_rental)) / (60 * 60 * 24)) ?> Hari</td>
 													</tr>
 												</table>
 											</div>
@@ -186,7 +215,7 @@
 											function sendData(result) {
 												$.ajax({
 													url: "<?= base_url('customer/transaksi/api_update/' . $id_transaksi) ?>",
-													method: "POST", //First change type to method here
+													method: "POST",
 
 													data: result,
 													success: function(response) {
@@ -227,7 +256,8 @@
 										</script>
 									<?php } ?>
 								</div>
-								<span>Total biaya Rp. <?= $transaksi->biaya * (date('d', strtotime($transaksi->tgl_kembali)) - date('d', strtotime($transaksi->tgl_rental))) ?></span>
+								<?php $biaya_sopir = $transaksi->jenis_layanan == 'sopir' ? 50000 : 0; ?>
+								<span>Total biaya Rp. <?= rupiah(($transaksi->biaya * $lama_sewa) + ($lama_sewa * $biaya_sopir)) ?></span>
 
 							</div>
 						</div>

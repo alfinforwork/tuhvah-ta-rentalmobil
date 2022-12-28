@@ -44,19 +44,17 @@
 			<div class="card-body">
 				<?php echo $this->session->flashdata('pesan') ?>
 
-				<table class="table table-sm table-hover table-striped table-borderd">
+				<table class="table table-sm table-hover table-striped">
 					<thead>
 						<tr class="text-center">
 							<th>NO</th>
-							<th>Kepemilikan</th>
-							<th>Nama Pemilik</th>
+							<th>Pemilik</th>
 							<th>Nama Customer</th>
 							<th>Mobil</th>
-							<th>Tanggal Rental</th>
-							<th>Tanggal Kembali</th>
-							<th>Tanggal Pengembalian</th>
+							<th>Tanggal</th>
 							<th>Biaya</th>
-							<th>Denda</th>
+							<th>Pembayaran</th>
+							<th>Bagi hasil</th>
 							<th>Aksi</th>
 						</tr>
 					</thead>
@@ -65,22 +63,47 @@
 						foreach ($data_transaksi as $value) : ?>
 							<tr>
 								<td><?php echo $no++ ?></td>
-								<td><?php echo $value->status_kepemilikan == 0 ? "Perusahaan" : "Mitra" ?></td>
-								<td><?php echo $value->status_kepemilikan == 0 ? "Perusahaan" : $this->db->where('id_mitra', $value->id_mitra)->get('tb_mitra')->row()->nama_mitra ?></td>
+								<td>
+									Kepemilikan : <b><?php echo $value->status_kepemilikan == 0 ? "Perusahaan" : "Mitra" ?></b><br>
+									Nama Pemilik : <b><?php echo $value->status_kepemilikan == 0 ? "Perusahaan" : $this->db->where('id_mitra', $value->id_mitra)->get('tb_mitra')->row()->nama_mitra ?></b>
+								</td>
 								<td><?php echo $value->nama ?></td>
 								<td><?php echo $value->merk ?></td>
-								<td><?= date('j F Y H:i:s', strtotime($value->tgl_rental)) ?></td>
-								<td><?= date('j F Y H:i:s', strtotime($value->tgl_kembali)) ?></td>
-								<td><?= $value->tgl_pengembalian ? date('j F Y H:i:s', strtotime($value->tgl_pengembalian)) : '<span class="badge badge-danger w-100">Belum ada</span>' ?></td>
-								<td class="text-right">Rp. <?php echo $rentang_waktu = date_diff(date_create($value->tgl_rental), date_create($value->tgl_kembali))->d * $value->biaya ?></td>
-								<td class="text-center">
+								<td>
+									Rental : <b><?= date('j F Y H:i:s', strtotime($value->tgl_rental)) ?></b> <br>
+									Kembali : <b><?= date('j F Y H:i:s', strtotime($value->tgl_kembali)) ?></b> <br>
+									Pengembalian : <b><?= $value->tgl_pengembalian ? date('j F Y H:i:s', strtotime($value->tgl_pengembalian)) : '<span class="badge badge-danger">Belum ada</span>' ?></b>
+								</td>
+								<td class="text-left">
+									<?php $lama_sewa = round((strtotime($value->tgl_kembali) - strtotime($value->tgl_rental)) / (60 * 60 * 24)) ?>
+									<?php $biaya_sopir = $value->jenis_layanan == 'sopir' ? 50000 : 0; ?>
+									Biaya : <b>Rp. <?= rupiah($biaya = (($value->biaya * $lama_sewa) + ($lama_sewa * $biaya_sopir))) ?></b><br>
+									Denda :
 									<?php
 									$beda_hari = floor((strtotime($value->tgl_pengembalian) - strtotime($value->tgl_kembali)) / 3600 / 24);
 									if ($beda_hari > 0) { ?>
-										<span class="badge badge-danger">Rp. <?= $beda_hari * ($value->biaya + 50000) ?></span>
-									<?php } else { ?>
+										<b>Rp. <?= rupiah($denda = (($value->biaya * 1.5) * $beda_hari)) ?></b>
+									<?php } else {
+										$denda = 0; ?>
 										<span class="badge badge-success" id="denda">Tidak ada</span>
-									<?php } ?>
+									<?php } ?><br>
+									Total : <b>Rp. <?= rupiah($total = (($biaya + $denda))) ?></b>
+								</td>
+								<td>
+									Tipe Pembayaran: <b><?= $value->tipe_pembayaran ?></b><br>
+									Jenis Pembayaran: <b><?= $value->jenis_pembayaran ?></b><br>
+									Potongan: <b>Rp. <?= rupiah($potongan_midtrans = 4000) ?></b>
+								</td>
+								<td>
+									<b>
+										<?php
+										if ($value->status_kepemilikan == 0) {
+											echo 'Milik Perusahaan <br> Rp. ' . rupiah(($total - $potongan_midtrans));
+										} else { ?>
+											Total : <?= rupiah(($total - $potongan_midtrans)) ?><br>
+											Perusahaan : <?= rupiah(($total - $potongan_midtrans) * 0.4) ?><br>
+											Mitra : <?= rupiah(($total - $potongan_midtrans) * 0.6) ?>
+										<?php } ?>
 								</td>
 								<td class="text-center">
 									<a href="<?php echo base_url('admin/transaksi/detail/') . $value->id_rental ?>" class="btn btn-sm btn-success"><i class="fas fa-eye"></i></a>

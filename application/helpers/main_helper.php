@@ -28,3 +28,9 @@ function cek_ketersediaan_mobil($id_mobil = null)
 		return true;
 	}
 }
+function rupiah($angka)
+{
+
+	$hasil_rupiah = number_format($angka, 2, ',', '.');
+	return $hasil_rupiah;
+}

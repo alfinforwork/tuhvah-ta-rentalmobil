@@ -38,55 +38,57 @@
 		</nav>
 		<div class="row">
 			<?php foreach ($data_mobil as $key => $value) {
-				if (cek_ketersediaan_mobil($value->id_mobil)) { ?>
-					<div class="col-lg-4 col-md-6 mb-4 p-4">
-						<div class="card custom-card">
-							<div class="card-body">
-								<div style="background-image: url('<?= site_url($value->gambar ? $value->gambar : 'assets/assets_customer/images/img_1.jpg') ?>');width:100%;height: 25vh;background-size: cover;background-position: center;" class="img-fluid"></div>
-								<div class="text-center mt-4">
-									<h3><a href="#" class="text-white"><?= $value->merk ?></a></h3>
-									<!-- <div class="rating">
+				// if ($value->id_rental) { 
+			?>
+				<div class="col-lg-4 col-md-6 mb-4 p-4">
+					<div class="card custom-card">
+						<div class="card-body">
+							<div style="background-image: url('<?= site_url($value->gambar ? $value->gambar : 'assets/assets_customer/images/img_1.jpg') ?>');width:100%;height: 25vh;background-size: cover;background-position: center;" class="img-fluid"></div>
+							<div class="text-center mt-4">
+								<h3><a href="#" class="text-white"><?= $value->merk ?></a></h3>
+								<!-- <div class="rating">
 											<span class="icon-star text-warning"></span>
 											<span class="icon-star text-warning"></span>
 											<span class="icon-star text-warning"></span>
 											<span class="icon-star text-warning"></span>
 											<span class="icon-star text-warning"></span>
 										</div> -->
-									<div><span>Rp. <?= $value->biaya ?>/</span>Hari</div>
-								</div>
-								<ul class="mt-4">
-									<li>
-										<span>Kode Tipe</span>
-										<span class="spec"><?= $value->kode_tipe ?></span>
-									</li>
-									<li>
-										<span>No Plat</span>
-										<span class="spec"><?= $value->no_plat ?></span>
-									</li>
-									<li>
-										<span>Warna</span>
-										<span class="spec"><?= $value->warna ?></span>
-									</li>
-									<li>
-										<span>Tahun</span>
-										<span class="spec"><?= $value->tahun ?></span>
-									</li>
-									<li>
-										<span>Mobil Dalam Keadaan Prima </span>
-									</li>
-									<li>
-										<span>Steril Dari Covid 19</span>
-									</li>
-								</ul>
-								<div class="d-flex action">
-									<a href="<?= site_url("customer/mobil/sewa/$value->id_mobil") ?>" class="btn btn-primary btn-sm"><i class="fas fa-check"></i> Sewa sekarang</a>
-								</div>
+								<div><span>Rp. <?= $value->biaya ?>/</span>Hari</div>
+							</div>
+							<ul class="mt-4">
+								<li>
+									<span>Kode Tipe</span>
+									<span class="spec"><?= $value->nama_tipe ?></span>
+								</li>
+								<li>
+									<span>No Plat</span>
+									<span class="spec"><?= $value->no_plat ?></span>
+								</li>
+								<li>
+									<span>Warna</span>
+									<span class="spec"><?= $value->warna ?></span>
+								</li>
+								<li>
+									<span>Tahun</span>
+									<span class="spec"><?= $value->tahun ?></span>
+								</li>
+								<li>
+									<span>Mobil Dalam Keadaan Prima </span>
+								</li>
+								<li>
+									<span>Steril Dari Covid 19</span>
+								</li>
+							</ul>
+							<div class="d-flex action">
+								<a href="<?= site_url("customer/mobil/sewa/$value->id_mobil") ?>" class="btn btn-primary btn-sm"><i class="fas fa-check"></i> Sewa sekarang</a>
 							</div>
 						</div>
 					</div>
+				</div>
 			<?php
-				}
-			} ?>
+			}
+			// } 
+			?>
 
 
 		</div>

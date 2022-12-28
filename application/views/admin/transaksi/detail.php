@@ -19,6 +19,8 @@
 										<!-- <a class="list-group-item list-group-item-action" id="list-buktitransfer-list" data-toggle="list" href="#list-buktitransfer" role="tab" aria-controls="buktitransfer">Bukti Transfer</a> -->
 										<?php if ($data_transaksi->status_rental >= 3) { ?>
 											<a class="list-group-item list-group-item-action" id="list-pengembalian-list" data-toggle="list" href="#list-pengembalian" role="tab" aria-controls="pengembalian">Pengembalian</a>
+											<a class="list-group-item list-group-item-action" id="list-pembayaran-list" data-toggle="list" href="#list-pembayaran" role="tab" aria-controls="pembayaran">Pembayaran</a>
+											<a class="list-group-item list-group-item-action" id="list-bagihasil-list" data-toggle="list" href="#list-bagihasil" role="tab" aria-controls="bagihasil">Bagi Hasil</a>
 										<?php } ?>
 									</div>
 								</div>
@@ -98,18 +100,24 @@
 															<td>Rp. <?= $data_transaksi->biaya ?></td>
 														</tr>
 														<tr>
-															<th>Tanggal sewa</th>
+															<th>Tanggal Rental</th>
 															<td><?php echo date('j F Y', strtotime($data_transaksi->tgl_rental)) ?></td>
+														</tr>
+														<tr>
+															<th>Tanggal Kembali</th>
+															<td><?php echo date('j F Y', strtotime($data_transaksi->tgl_kembali)) ?></td>
 														</tr>
 														<tr>
 															<th>Lama Sewa</th>
 															<td>
-																<?php echo $rentang_waktu = date_diff(date_create($data_transaksi->tgl_rental), date_create($data_transaksi->tgl_kembali))->d ?> hari
+																<?php $lama_sewa = round((strtotime($data_transaksi->tgl_kembali) - strtotime($data_transaksi->tgl_rental)) / (60 * 60 * 24)) ?>
+																<?php echo $lama_sewa ?> hari
 															</td>
 														</tr>
 														<tr>
-															<th>Total biaya</th>
-															<td>Rp. <?= $rentang_waktu * $data_transaksi->biaya ?></td>
+															<th>Total Biaya</th>
+															<?php $biaya_sopir = $data_transaksi->jenis_layanan == 'sopir' ? 50000 : 0; ?>
+															<td>Rp. <?= rupiah($biaya = (($data_transaksi->biaya * $lama_sewa) + ($lama_sewa * $biaya_sopir))) ?></td>
 														</tr>
 													</table>
 												</div>
@@ -185,7 +193,7 @@
 																			var diffDays = Math.round((tanggal_pengembalian.getTime() - tanggal_kembali.getTime()) - (satu_hari));
 																			console.log(diffDays)
 																			if (diffDays > 0) {
-																				$('#denda').html('Rp. ' + Math.ceil(diffDays / (1000 * 60 * 60 * 24)) * <?php echo $data_transaksi->biaya + 50000; ?>)
+																				$('#denda').html('Rp. ' + Math.ceil(diffDays / (1000 * 60 * 60 * 24)) * <?php echo $data_transaksi->biaya * 1.5; ?>)
 																				$('#row_denda').css('display', 'table-row')
 																			} else {
 																				$('#row_denda').css('display', 'none')
@@ -202,7 +210,9 @@
 																	<td><button type="submit" class="btn btn-success">Yakin</button></td>
 																</tr>
 															</form>
-														<?php } else { ?>
+														<?php
+															$denda = 0;
+														} else { ?>
 															<tr>
 																<th>Tanggal Rental</th>
 																<td><?= $data_transaksi->tgl_rental ? date('j F Y H:i:s', strtotime($data_transaksi->tgl_rental)) : '<span class="badge badge-danger w-100">Belum ada</span>' ?></td>
@@ -221,11 +231,66 @@
 																	<?php
 																	$beda_hari = floor((strtotime($data_transaksi->tgl_pengembalian) - strtotime($data_transaksi->tgl_kembali)) / 3600 / 24);
 																	if ($beda_hari > 0) { ?>
-																		<span class="badge badge-danger">Rp. <?= ($data_transaksi->biaya + 50000) * $beda_hari ?></span>
+																		<span class="badge badge-danger">Rp. <?= $denda = ($data_transaksi->biaya * 1.5) * $beda_hari ?></span>
 																	<?php } else { ?>
 																		<span class="badge badge-success" id="denda">Tidak ada</span>
 																	<?php } ?>
 																</td>
+															</tr>
+														<?php } ?>
+													</table>
+												</div>
+											</div>
+										</div>
+										<div class="tab-pane fade" id="list-pembayaran" role="tabpanel" aria-labelledby="list-pembayaran-list">
+											<div class="card">
+												<div class="card-header text-center">
+													<h4 class="text-center w-100">Pembayaran</h4>
+												</div>
+												<div class="card-body">
+													<table class="table table-sm table-hover table-striped">
+														<tr>
+															<th>Tipe Pembayaran</th>
+															<td><?= $data_transaksi->tipe_pembayaran ?></td>
+														</tr>
+														<tr>
+															<th>Jenis Pembayaran</th>
+															<td><?= $data_transaksi->jenis_pembayaran ?></td>
+														</tr>
+														<tr>
+															<th>Kode Pembayaran</th>
+															<td><?= $data_transaksi->kode_pembayaran ?></td>
+														</tr>
+													</table>
+												</div>
+											</div>
+										</div>
+										<div class="tab-pane fade" id="list-bagihasil" role="tabpanel" aria-labelledby="list-bagihasil-list">
+											<div class="card">
+												<div class="card-header text-center">
+													<h4 class="text-center w-100">Bagi Hasil</h4>
+												</div>
+												<div class="card-body">
+													<table class="table table-sm table-hover table-striped">
+														<?php $total = (($biaya + $denda)) ?>
+														<?php $potongan_midtrans = 4000 ?>
+														<?php if ($data_transaksi->status_kepemilikan == 0) { ?>
+															<tr>
+																<th>Perusahaan</th>
+																<td><?= rupiah(($total - $potongan_midtrans)) ?></td>
+															</tr>
+														<?php } else { ?>
+															<tr>
+																<th>Total</th>
+																<td><?= rupiah(($total - $potongan_midtrans)) ?></td>
+															</tr>
+															<tr>
+																<th>Perusahaan</th>
+																<td><?= rupiah(($total - $potongan_midtrans) * 0.4) ?></td>
+															</tr>
+															<tr>
+																<th>Mitra</th>
+																<td><?= rupiah(($total - $potongan_midtrans) * 0.6) ?></td>
 															</tr>
 														<?php } ?>
 													</table>

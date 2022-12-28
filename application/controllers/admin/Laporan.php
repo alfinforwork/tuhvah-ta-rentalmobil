@@ -65,7 +65,6 @@ class Laporan extends CI_Controller
 
 	public function mobil()
 	{
-		$model = $this->Transaksi_model;
 		$menu = $this->input->get('menu');
 		$dari = $this->input->get('dari', TRUE);
 		$ke = $this->input->get('ke', TRUE);
@@ -86,14 +85,14 @@ class Laporan extends CI_Controller
 		$config['per_page'] = 9;               //Tes
 		$config['page_query_string'] = TRUE;
 		if ($menu == 'belum_dikembalikan') {
-			$config['total_rows'] = $model->jumlah_data_laporan_belum_dikembalikan($q, $dari, $ke, $status_kepemilikan, $mitra);
-			$transaksi = $model->limit_data_laporan_belum_dikembalikan($config['per_page'], $start, $q, $dari, $ke, $status_kepemilikan, $mitra);
+			$config['total_rows'] = $this->Transaksi_model->jumlah_data_laporan_belum_dikembalikan($q, $dari, $ke, $status_kepemilikan, $mitra);
+			$transaksi = $this->Transaksi_model->limit_data_laporan_belum_dikembalikan($config['per_page'], $start, $q, $dari, $ke, $status_kepemilikan, $mitra);
 		} elseif ($menu == 'perlu_dikembalikan_hari_ini') {
-			$config['total_rows'] = $model->jumlah_data_laporan_perlu_dikembalikan_hari_ini($q, $dari, $ke, $status_kepemilikan, $mitra);
-			$transaksi = $model->limit_data_laporan_perlu_dikembalikan_hari_ini($config['per_page'], $start, $q, $dari, $ke, $status_kepemilikan, $mitra);
+			$config['total_rows'] = $this->Transaksi_model->jumlah_data_laporan_perlu_dikembalikan_hari_ini($q, $dari, $ke, $status_kepemilikan, $mitra);
+			$transaksi = $this->Transaksi_model->limit_data_laporan_perlu_dikembalikan_hari_ini($config['per_page'], $start, $q, $dari, $ke, $status_kepemilikan, $mitra);
 		} elseif ($menu == 'telat_dikembalikan') {
-			$config['total_rows'] = $model->jumlah_data_laporan_telat_dikembalikan($q, $dari, $ke, $status_kepemilikan, $mitra);
-			$transaksi = $model->limit_data_laporan_telat_dikembalikan($config['per_page'], $start, $q, $dari, $ke, $status_kepemilikan, $mitra);
+			$config['total_rows'] = $this->Transaksi_model->jumlah_data_laporan_telat_dikembalikan($q, $dari, $ke, $status_kepemilikan, $mitra);
+			$transaksi = $this->Transaksi_model->limit_data_laporan_telat_dikembalikan($config['per_page'], $start, $q, $dari, $ke, $status_kepemilikan, $mitra);
 		} else {
 			header('Location:pilih_menu');
 		}
