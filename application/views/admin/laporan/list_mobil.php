@@ -6,6 +6,7 @@
 		<div class="card">
 			<div class="card-body">
 				<form action="" method="get">
+					<input type="hidden" name="menu" id="menu" value="<?= $_GET['menu'] ?>">
 					<div class="form-group">
 						<label for="status_kepemilikan">Kepemilikan</label>
 						<select name="status_kepemilikan" id="status_kepemilikan" class="form-control" style="height:42px">
