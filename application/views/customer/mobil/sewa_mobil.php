@@ -108,8 +108,8 @@
 															<td>
 																<div class="input-group input-group-sm">
 																	<select name="jenis_layanan" id="jenis_layanan" class="form-control" required>
-																		<option value="sopir">Sopir</option>
 																		<option value="tanpa_sopir">Tanpa Sopir</option>
+																		<option value="sopir">Sopir</option>
 																	</select>
 																</div>
 															</td>
@@ -151,7 +151,7 @@
 																	<script>
 																		function change_jenis_layanan() {
 																			var jenis_layanan = $('#jenis_layanan').val();
-																			if (jenis_layanan == 'sopir') {
+																			if (jenis_layanan != 'sopir') {
 																				$("#jaminan_sopir").css('display', 'block');
 																				$("#jaminan_stnk_nama").attr('required', 'true');
 																				$("#jaminan_stnk_plat").attr('required', 'true');
@@ -200,7 +200,7 @@
 															<td>
 																<?= form_error('tgl_sewa') ?>
 																<div class="input-group input-group-sm">
-																	<input type="datetime-local" name="tgl_sewa" id="tgl_sewa" class="form-control" required value="<?= $this->input->post('tgl_sewa', true) ?>" min="<?= date('Y-m-d') ?>">
+																	<input type="datetime-local" name="tgl_sewa" id="tgl_sewa" class="form-control" required value="<?= $this->input->post('tgl_sewa', true) ?>" min="<?= date('Y-m-d H:i:s') ?>" max="<?= date('Y-m-d H:i:s', strtotime("+7 day")) ?>">
 																</div>
 															</td>
 														</tr>

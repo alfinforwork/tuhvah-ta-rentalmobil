@@ -28,7 +28,7 @@
 			<td class="text-center">
 				<?php
 				if ($beda_hari > 0) {
-					$denda = $beda_hari * ($value->biaya + 50000);
+					$denda = $beda_hari * ($value->biaya);
 				?>
 					Rp. <?= $denda ?>
 				<?php } else {

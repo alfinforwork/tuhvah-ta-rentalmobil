@@ -78,7 +78,7 @@
 									<?php
 									$beda_hari = floor((strtotime($value->tgl_pengembalian) - strtotime($value->tgl_kembali)) / 3600 / 24);
 									if ($beda_hari > 0) { ?>
-										<span class="badge badge-danger">Rp. <?= $beda_hari * ($value->biaya + 50000) ?></span>
+										<span class="badge badge-danger">Rp. <?= $beda_hari * ($value->biaya) ?></span>
 									<?php } else { ?>
 										<span class="badge badge-success" id="denda">Tidak ada</span>
 									<?php } ?>

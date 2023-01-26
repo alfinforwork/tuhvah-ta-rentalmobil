@@ -82,7 +82,7 @@
 									<?php
 									$beda_hari = floor((strtotime($value->tgl_pengembalian) - strtotime($value->tgl_kembali)) / 3600 / 24);
 									if ($beda_hari > 0) { ?>
-										<b>Rp. <?= rupiah($denda = (($value->biaya * 1.5) * $beda_hari)) ?></b>
+										<b>Rp. <?= rupiah($denda = (($value->biaya) * $beda_hari)) ?></b>
 									<?php } else {
 										$denda = 0; ?>
 										<span class="badge badge-success" id="denda">Tidak ada</span>

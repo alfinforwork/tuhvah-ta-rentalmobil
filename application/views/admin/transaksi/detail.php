@@ -190,10 +190,11 @@
 																			var satu_hari = 24 * 60 * 60 * 1000;
 																			var tanggal_kembali = new Date(`<?= $data_transaksi->tgl_kembali ?>`)
 																			var tanggal_pengembalian = new Date($('#tgl_pengembalian').val())
-																			var diffDays = Math.round((tanggal_pengembalian.getTime() - tanggal_kembali.getTime()) - (satu_hari));
+																			// var diffDays = Math.round((tanggal_pengembalian.getTime() - tanggal_kembali.getTime()) - (satu_hari));
+																			var diffDays = Math.round((tanggal_pengembalian.getTime() - tanggal_kembali.getTime()));
 																			console.log(diffDays)
 																			if (diffDays > 0) {
-																				$('#denda').html('Rp. ' + Math.ceil(diffDays / (1000 * 60 * 60 * 24)) * <?php echo $data_transaksi->biaya * 1.5; ?>)
+																				$('#denda').html('Rp. ' + Math.ceil(diffDays / (1000 * 60 * 60 * 24)) * <?php echo $data_transaksi->biaya; ?>)
 																				$('#row_denda').css('display', 'table-row')
 																			} else {
 																				$('#row_denda').css('display', 'none')
@@ -231,7 +232,7 @@
 																	<?php
 																	$beda_hari = floor((strtotime($data_transaksi->tgl_pengembalian) - strtotime($data_transaksi->tgl_kembali)) / 3600 / 24);
 																	if ($beda_hari > 0) { ?>
-																		<span class="badge badge-danger">Rp. <?= $denda = ($data_transaksi->biaya * 1.5) * $beda_hari ?></span>
+																		<span class="badge badge-danger">Rp. <?= $denda = ($data_transaksi->biaya) * $beda_hari ?></span>
 																	<?php } else { ?>
 																		<span class="badge badge-success" id="denda">Tidak ada</span>
 																	<?php } ?>
