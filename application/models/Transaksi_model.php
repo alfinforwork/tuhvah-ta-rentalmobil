@@ -124,7 +124,7 @@ class Transaksi_model extends CI_Model
 		$this->data_by_q($q);
 		$this->filter_tanggal($dari, $ke);
 		$this->filter_tambahan($status_kepemilikan, $mitra);
-		$this->db->where('date(tgl_kembali) <', date('Y-m-d'));
+		$this->db->where('tgl_kembali <', date('Y-m-d H:i:s'));
 		$this->db->where('tgl_pengembalian', null);
 		$this->db->where('status_rental', 3);
 		return $this->db->count_all_results();
@@ -134,7 +134,7 @@ class Transaksi_model extends CI_Model
 		$this->data_by_q($q);
 		$this->filter_tanggal($dari, $ke);
 		$this->filter_tambahan($status_kepemilikan, $mitra);
-		$this->db->where('date(tgl_kembali) <', date('Y-m-d'));
+		$this->db->where('tgl_kembali <', date('Y-m-d H:i:s'));
 		$this->db->where('tgl_pengembalian', null);
 		$this->db->where('status_rental', 3);
 		$this->db->limit($limit, $start);

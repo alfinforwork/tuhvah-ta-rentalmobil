@@ -200,7 +200,7 @@
 															<td>
 																<?= form_error('tgl_sewa') ?>
 																<div class="input-group input-group-sm">
-																	<input type="datetime-local" name="tgl_sewa" id="tgl_sewa" class="form-control" required value="<?= $this->input->post('tgl_sewa', true) ?>" min="<?= date('Y-m-d H:i:s') ?>" max="<?= date('Y-m-d H:i:s', strtotime("+7 day")) ?>">
+																	<input type="datetime-local" name="tgl_sewa" id="tgl_sewa" class="form-control" required value="<?= $this->input->post('tgl_sewa', true) ?>" min="<?= date('Y-m-d H:i:s') ?>" max="<?= date('Y-m-d H:i:s', strtotime("+7 day")) ?>" step="any">
 																</div>
 															</td>
 														</tr>
